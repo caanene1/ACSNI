@@ -1,0 +1,32 @@
+#!python
+
+import argparse
+from pandas import read_csv
+import pickle
+from SRC.network import get_explained_variation, get_summary_stat_phenotype
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-r', '--result', type=str,
+                    help='ACSNI results database', default='dbs.ptl')
+parser.add_argument('-v', '--phy', type=str,
+                    help='Target phenotype to extract prediction', default='Phenotype.csv')
+parser.add_argument('-c', '--cla', type=str,
+                    help='The data type of the target phenotype ["numeric" or "character"]', default='character')
+args = parser.parse_args()
+
+
+inp = args.result
+eno = args.phy
+cla_ss = args.cla
+
+
+r_dbs = pickle.load(open(inp, "rb"))
+phy = read_csv(eno)
+
+#
+YU, names_tar = r_dbs.get_associated_module(phy)
+results = get_explained_variation(exp=YU, nm=names_tar, cla_ss=cla_ss)
+results = get_summary_stat_phenotype(x=results, nm=names_tar)
+results.to_csv("{}_to subprocess associations.csv".format(names_tar), index=False)
+

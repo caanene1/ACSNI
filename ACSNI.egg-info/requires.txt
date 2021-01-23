@@ -1,0 +1,5 @@
+numpy
+pandas
+sklearn
+scipy~=1.5.4
+tensorflow~=2.3.1
