@@ -43,7 +43,7 @@ tablate_group <- function(x) {
   return(x)
 }
 ## Function to calculate DE stats
-stat_DE <- function(x=x, y=datasets, f=0.1, fc=1.5) {
+stat_DE <- function(x=x, y=datasets, f=0.1, fc=0.5) {
   for (i in y) {
     x$FDR <- as.numeric(gsub(".*_", "", x[[i]]))
     x$FC <- abs(as.numeric(gsub("_.*", "", x[[i]])))

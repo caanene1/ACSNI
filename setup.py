@@ -10,14 +10,15 @@ with open("requirements.txt") as rq:
 setuptools.setup(
     name="ACSNI",
     version="1.0.0",
-    scripts=["ACSNI", "ACSNI-derive", "ACSNI-get", "ACSNI-split"],
+    scripts=["bin/ACSNI-run", "bin/ACSNI-derive", "bin/ACSNI-get", "bin/ACSNI-split"],
     author="Chinedu A. Anene",
+    collaborator="Faraz Khan",
     author_email="caanenedr@outlook.com",
     description="automatic context-specific network inference",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/caanene1/ACSNI",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(include=["ACSNI", "ACSNI.SRC"]),
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -25,6 +26,7 @@ setuptools.setup(
         "Operating System :: OS Independent"
     ],
     install_requires=install_requires,
+    python_requires='>=3.6',
 )
 
 # Build this package with >> python3 setup.py sdist bdist_wheel
