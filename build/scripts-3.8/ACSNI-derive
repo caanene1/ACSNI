@@ -102,14 +102,14 @@ elif i_corr is not None:
     corr_file = pd.DataFrame(data=corr_file)
 
     if corr_file.columns[0] != 'gene' or corr_file.columns[1] != 'cor':
-        sys.exit("Make sure the column names and the order of the correlation file"
-                 "file is in the right format: 'gene','cor'")
+        sys.exit("Make sure the column names and the order of the correlation file "
+                 "is in the right format: 'gene','cor'")
     else:
         gpb=corr_file['gene'].str.contains(i_gene).sum()
         if gpb <= 0:
-            sys.exit('ERROR: Gene not found in Correlation file')
+            sys.exit("Gene not found in Correlation file")
 else:
-    sys.exit("Correlation file must be provided if you intend to use modified geneset"
+    sys.exit("Correlation file must be provided if you intend to use modified gene set "
              "for the generation of prior matrix 1. Else leave the -u/--corr_file parameter as default")
 
 

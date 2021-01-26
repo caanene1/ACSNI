@@ -5,9 +5,6 @@ Name: ACSNI
 Version: 0.1.11
 Author: Chinedu A. Anene, Phd
 
-# Usage:
-python3 ACSNI -h
-python3 ACSNI -i expression.csv -t geneSet.csv
 """
 
 ##############################################################################
@@ -97,6 +94,7 @@ for z in prior_matrix:
             set_seed(sd_boot)
             corep.run_full(prior_m=prior_matrix[z], gi=z, expression_m=expression_matrix,
                            w=w1, f=fu, mad=mad_f, nn=inp, p=lp, s=i, a=alpha_cut)
+
         Co, W, N, P, D = sim.merge_multi(os.getcwd())
         sim.save_merged_w_n_p_d(co=Co, w=W, n=N, p=P, d=D, nn=inp,
                                 path=os.getcwd(), run_info=run_info)
@@ -120,3 +118,7 @@ if fu == 0:
 print("Creating null model")
 sim_mat = sim.shuffle_exp(expression_matrix)
 sim_mat.to_csv("NULL_{}".format(inp), index=True)
+
+# Collect garbage
+import gc
+gc.collect()
