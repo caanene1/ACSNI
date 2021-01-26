@@ -39,13 +39,16 @@ n = int(args.split)
 full_data = read_csv(df).transpose()
 head_only = full_data.iloc[:1, ]
 head_less = full_data.iloc[1:]
+
 # Random sample
 seed = int(np.random.randint(low=0, high=10000, size=1))
 np.random.seed(seed)
+
 # Shuffle and sample
 shuffled = head_less.sample(frac=1)
 res = np.array_split(shuffled, n)
-# Save all the the working directory
+
+# Save all in the the working directory
 index = 0
 for i in res:
     dat_s = pd.concat([head_only, i]).transpose()

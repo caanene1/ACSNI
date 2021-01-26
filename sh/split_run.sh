@@ -1,1 +1,1 @@
-for f in * ; do python3 main.py -i $f -t Paths.csv; done
+for f in * ; do ACSNI-run -i "$f" -t Paths.csv; done
