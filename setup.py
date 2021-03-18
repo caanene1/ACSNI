@@ -18,7 +18,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/caanene1/ACSNI",
-    download_url = "https://github.com/caanene1/ACSNI/releases/download/1.0.0/ACSNI-1.0.1-py3-none-any.whl",
+    download_url = "https://github.com/caanene1/ACSNI/releases/download/1.0.1/ACSNI-1.0.1-py3-none-any.whl",
     packages=setuptools.find_packages(include=["ACSNI", "ACSNI.SRC"]),
     include_package_data=True,
     classifiers=[
