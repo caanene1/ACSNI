@@ -257,19 +257,20 @@ robust_overP <- function(x=PP, y=PP2, b=100){
 
 
 ##################### Simulation studies functions #############################
+##
 ## Function to stimulate geneset expression pattern
-sim_geneSet_pat <- function(exp=AA, geneSet=mTOR){
-  genes <- geneSet[geneSet[names(geneSet[2])] == 1,]["gene"]
-  ExpressionData <- exp[exp$gene %in% genes$gene,]
+sim_geneSet_pat <- function(exp=AA, geneSet=mTOR) {
+  ExpressionData <- exp[exp$gene %in% geneSet, ]
   ExpressionData$gene <- paste("Ingene_", ExpressionData$gene, sep = "")
   return(ExpressionData)
 }
+
 ## Function to get the prior matrix
-get_sim_prior <- function(df){
-  simSet <- df["gene"]
-  simSet$simSet <- 1
+get_sim_prior <- function(y){
+  simSet <- data.frame("gene" = y, "simSet" = 1)
   return(simSet)
 }
+
 ## Function to shuffle expression mat
 shuffle_exp <- function(x){
   # Note: No seed is intentional to avoid unwanted patterns
@@ -285,14 +286,15 @@ shuffle_exp <- function(x){
   }
   return(x)
 }
+
 ## Function to whole transcriptome expression pattern
 sim_transcriptome <- function(exp=AA, geneSet=mTOR){
-  genes <- geneSet[geneSet[names(geneSet[2])] == 1,]["gene"]
-  ExpressionData <- exp[!exp$gene %in% genes$gene,]
+  ExpressionData <- exp[!exp$gene %in% geneSet,]
   ExpressionData <- shuffle_exp(ExpressionData)
   ExpressionData$gene <- paste("trans_", ExpressionData$gene, sep = "")
   return(ExpressionData)
 }
+
 ## Function to generate inverse of the the gene set pattern positive control
 sim_invert_geneSet_pat <- function(frame){
   new_frame <- frame
@@ -307,6 +309,7 @@ sim_invert_geneSet_pat <- function(frame){
   new_frame$gene <- paste("invert_", new_frame$gene, sep = "")
   return(new_frame)
 }
+
 ## Function to add lognormal noise to data frame
 sim_add_lnorm_noise <- function(frame, factor=0.1){
   new_frame <- frame
@@ -326,55 +329,128 @@ sim_add_lnorm_noise <- function(frame, factor=0.1){
   new_frame$gene <- paste("noise", factor, "_", new_frame$gene,   sep = "")
   return(new_frame)
 }
+
 ## Function to combine simulation data
-get_and_save <- function(x=AA, y=prior) {
-  df <- sim_geneSet_pat(exp=x, geneSet=y)
-  prior <- get_sim_prior(df)
+get_and_save <- function(x=AA, y=prior, namesave="path") {
+  df1 <- sim_geneSet_pat(exp=x, geneSet=y)
+  prior <- get_sim_prior(df1)
   df2 <- sim_transcriptome(exp=x, geneSet=y)
   # Invert
-  df3 <- sim_invert_geneSet_pat(df)
+  df3 <- sim_invert_geneSet_pat(df1)
   # Noise
-  df4 <- sim_add_lnorm_noise(frame = df, factor = 0.1)
-  df5 <- sim_add_lnorm_noise(frame = df, factor = 0.2)
-  df6 <- sim_add_lnorm_noise(frame = df, factor = 0.3)
-  df7 <- sim_add_lnorm_noise(frame = df, factor = 0.4)
-  df8 <- sim_add_lnorm_noise(frame = df, factor = 0.5)
+  df4 <- sim_add_lnorm_noise(frame = df1, factor = 0.05)
+  df5 <- sim_add_lnorm_noise(frame = df1, factor = 0.06)
+  df6 <- sim_add_lnorm_noise(frame = df1, factor = 0.07)
+  df7 <- sim_add_lnorm_noise(frame = df1, factor = 0.08)
+  df8 <- sim_add_lnorm_noise(frame = df1, factor = 0.09)
+  df9 <- sim_add_lnorm_noise(frame = df1, factor = 0.1)
+  df10 <- sim_add_lnorm_noise(frame = df1, factor = 0.2)
+  df11 <- sim_add_lnorm_noise(frame = df1, factor = 0.3)
+  df12 <- sim_add_lnorm_noise(frame = df1, factor = 0.4)
+  df13 <- sim_add_lnorm_noise(frame = df1, factor = 0.5)
+
   ## Do shuffled
-  df9 <- shuffle_exp(df)
-  df9$gene <- paste("shuffled_", df9$gene, sep = "")
+  df14 <- shuffle_exp(df1)
+  df14$gene <- paste("shuffled_", df14$gene, sep = "")
+
   ### Save the data
-  l_st <- list(df2, df3, df4, df5, df6, df7, df8, df9)
-  for(i in l_st){
-    df <- rbind(df, i)
-  }
+  df <- do.call(rbind, list(df1, df2, df3, df4, df5, df6, df7, df8,
+                            df9, df10, df11, df12, df13, df14))
+
   ## Write table
-  write.csv(prior, file = "simSet.csv", row.names = F)
-  write.csv(df, file = "simDf.csv", row.names = F)
+  write.csv(prior, file = paste(namesave, "_P1.csv", sep = ""), row.names = F)
+  write.csv(df, file = paste(namesave, "_P2.csv", sep = ""), row.names = F)
 }
-## Function to calculate the rates in a simulation
-calc_simulate_rate <- function(x, y="mad", z="run"){
-  P <- x
-  P$Group <- gsub("(_).*", "\\1", P$gene)
-  set_group <- unique(P$Group)
-  P$PP <- ifelse(P$Sum_stat >= 2, "P", "B")
-  geneSetSize <- nrow(P[P$Group == "Ingene_", ])
-  #
-  Result <- data.frame("ID"="base", "Sum"=0, "B" = 0,
-                       "P"=0, "Rate"=0, "MAD"=0, "Set"=0)
-  for(i in set_group){
-    n_df <- P[P$Group == i, ]
-    summ <- nrow(n_df)
-    B_l <- nrow(n_df[n_df$PP == "B",])
-    P_l <- nrow(n_df[n_df$PP == "P",])
-    rate <- P_l/summ
-    res <- data.frame("ID"=i, "Sum"=summ, "B" = B_l, "P"=P_l,
-                      "Rate"=rate, "MAD"=y, "Set"=z)
-    Result <- rbind(Result, res)
+
+############# Load data for simualtion
+BiocManager::install("qusage")
+setG <- qusage::read.gmt("~/Desktop/Install ACSNI-Linux/c2.cp.pid.v7.2.symbols.gmt")
+
+# Filter list
+newlist <- list()
+for (i in names(setG)) {
+  if (length(setG[[i]]) > 25 & length(setG[[i]]) < 200) {
+    newlist[i] <- setG[i]
   }
-  Result <- Result[-1,]
-  Result$Size <- geneSetSize
+}
+
+# Get sample
+setGSample <- sample(newlist, 50)
+
+## Get the expressions
+Breast <- read.csv("~/Desktop/Install ACSNI-Linux/Exp/Breast.csv")
+Liver <- read.csv("~/Desktop/Install ACSNI-Linux/Exp/Liver.csv")
+Pancreas <- read.csv("~/Desktop/Install ACSNI-Linux/Exp/Pancreas.csv")
+Prostate <- read.csv("~/Desktop/Install ACSNI-Linux/Exp/Prostate.csv")
+Stomach <- read.csv("~/Desktop/Install ACSNI-Linux/Exp/Stomach.csv")
+
+### Usage of the code for the reported simulations
+for (i in names(setGSample)) {
+  print(i)
+  nnm1 <- paste("Breast_", i, sep = "")
+  nnm2 <- paste("Liver_", i, sep = "")
+  nnm3 <- paste("Pancreas_", i, sep = "")
+  nnm4 <- paste("Prostate_", i, sep = "")
+  nnm5 <- paste("Stomach_", i, sep = "")
+
+
+  get_and_save(x=Breast, y = setGSample[[i]], namesave = nnm1)
+  get_and_save(x=Liver, y = setGSample[[i]], namesave = nnm2)
+  get_and_save(x=Pancreas, y = setGSample[[i]], namesave = nnm3)
+  get_and_save(x=Prostate, y = setGSample[[i]], namesave = nnm4)
+  get_and_save(x=Stomach, y = setGSample[[i]], namesave = nnm5)
+}
+
+## Function to calculate the rates in a simulation
+calc_simulate_rate <- function(path, files) {
+  Result <- data.frame("ID"="base", "Sum"=0, "B" = 0,
+                       "P"=0, "Rate"=0, "mad"=0, "alpha"=0, "percentage"=0,
+                       "totalP" = 0, "Size" = 0,  "pathway" = 0, "reg"=0)
+   f <- files[1]
+
+    for (f in files){
+    P <- read.csv(paste(path, "/", f, sep = ""))
+    P$Group <- gsub("(_).*", "\\1", P$gene)
+    set_group <- unique(P$Group)
+    P$PP <- ifelse(P$Sum_stat >= 2, "P", "B")
+    totalP <- nrow(P[P$PP == "P",])
+    geneSetSize <- nrow(P[P$Group == "Ingene_", ])
+
+    temp <- data.frame("ID"="base", "Sum"=0, "B" = 0,
+                         "P"=0, "Rate"=0)
+    #
+    for(i in set_group){
+      n_df <- P[P$Group == i, ]
+      summ <- nrow(n_df)
+      B_l <- nrow(n_df[n_df$PP == "B",])
+      P_l <- nrow(n_df[n_df$PP == "P",])
+      rate <- P_l/summ
+      res <- data.frame("ID"=i, "Sum"=summ, "B" = B_l, "P"=P_l,
+                        "Rate"=rate)
+      temp <- rbind(temp, res)
+    }
+
+    temp <- temp[-1,]
+
+    temp$mad <- unique(P$mad)
+    temp$alpha <- unique(P$alpha)
+    temp$percentage <- unique(P$percentage)
+    temp$totalP <- totalP
+    temp$Size <- geneSetSize
+    temp$pathway <- unique(P$pathway)
+    temp$reg <- unique(P$status)
+
+
+    Result <- rbind(Result, temp)
+    }
+  Result <- Result[-1, ]
   return(Result)
 }
+
+### Run data
+output <- calc_simulate_rate(path, files)
+####
+
 ## Function to create or add data to simulation database
 save_simulation <- function(z=res_db){
   if(file.exists("db_sim.RData")){
@@ -467,8 +543,8 @@ get_benchmark <- function(expr, set){
   # Function to get benchmark method
   # expr: Expression matrix as per gsva() spec
   # set: Single gene set as per ACSNI use
-  
-  
+
+
   method=c("gsva", "ssgsea", "zscore", "plage")
   #
   n = 0
@@ -486,17 +562,17 @@ get_benchmark <- function(expr, set){
       res <- rbind(res, re)
     }
   }
-  
-  ### Get network 
-  
+
+  ### Get network
+
   X_net <- rbind(res, X)
-  
+
   out <- data.frame("gene" = rownames(X_net))
   for (i in 1:4){
     vec <- c()
     for (z in 1:nrow(X_net)){
       cor <- cor(as.numeric(X_net[i,]), as.numeric(X_net[z, ]))
-      vec <- c(vec, cor) 
+      vec <- c(vec, cor)
     }
     out[method[i]] <- vec
   }
@@ -509,17 +585,17 @@ get_benchmark <- function(expr, set){
   ## Example data preparation using AA and ATF2 case
   AA <- read.csv("~/Documents/ACSNI/2.Data/ATF4-case/AA_.csv")
   ATF2 <- read.csv("~/Documents/ACSNI/2.Data/ATF4-case/ATF2.csv")
-  
+
   X <- AA
   rownames(X) <- X$gene
   X <- X[2:433]
-  
+
   set <- mTOR[mTOR$PID_MTOR_4PATHWAY == 1,]["gene"]
   set <- ATF2[ATF2$PID_ATF2_PATHWAY == 1,]["gene"]
 }
 ##############################################################################
 {
-  # Particular calcualtions
+  # Particular calculations
 dat <- GSE
 method <- names(dat[2:5])
 val = c("KLF6_GSE115763", "EPAS1_GSE115389")
@@ -538,7 +614,7 @@ for (m in method){
   for (m in method) {
     n = n+1
     res <- predict_z_b(x=dat, y=m, cut=0.4)
-     
+
      if(n == 1) {
        out <- stat_chip_global(x=res, y=names(tab[2:9]), chip=tab)
        out$method <- m
@@ -547,13 +623,13 @@ for (m in method){
        ou$method <- m
        out <- rbind(out, ou) }
   }
-  
+
   write.csv(out, "AA_ATF2.csv", row.names = F)
-  
+
 }
 
-### Get the tables 
-### 
+### Get the tables
+###
 {
   # Benchmark plot
   plot <- plot[plot$Model == "Real",]
@@ -572,5 +648,151 @@ for (m in method){
             lab.pos = "out"
             #x.text.angle = 90
             )
-  
+
 }
+
+
+
+#### Process data for comparing the different types of reduction
+# Load the full P data
+vect <- names(P)
+
+AE <- P[1]
+PCA <- P[1]
+NMF <- P[1]
+
+for(i in vect){
+  if (startsWith(i, "AE_")){
+    AE <- cbind(AE, P[i])
+  } else if (startsWith(i, "PCA_")){
+    PCA <- cbind(PCA, P[i])
+  } else if (startsWith(i, "NMF_")){
+    NMF <- cbind(NMF, P[i])
+  }
+}
+
+# Get dimensions
+d_AE <- ncol(AE[endsWith(names(AE[-1]), ".1")])
+d_PCA <- ncol(PCA[endsWith(names(PCA[-1]), ".1")])
+d_NMF <- ncol(NMF[endsWith(names(NMF[-1]), ".1")])
+
+# get number of bootstraps
+b_AE <- ncol(AE[-1]) / d_AE
+b_PCA <- ncol(PCA[-1]) / d_PCA
+b_NMF <- ncol(NMF[-1]) / d_NMF
+
+## Process in turn
+PP <- lapply(1:b_NMF, function(x){
+  en <- d_NMF * x + 1
+  st <- en - d_NMF + 1
+  pr <- rowSums(NMF[st:en] == "P")
+  pr <- ifelse(pr >= 1, 1, 0)
+})
+PP <- do.call(cbind, PP)
+##
+
+## Add each sum
+AE$PP <- rowSums(PP)
+PCA$PP <- rowSums(PP)
+NMF$PP <- rowSums(PP)
+##
+ae <- predict_z_b(x=AE, y="PP", cut=2)
+pca <- predict_z_b(x=PCA, y="PP", cut=2)
+nmf <- predict_z_b(x=NMF, y="PP", cut=2)
+allre <- predict_z_b(x=P, y = "Sum_stat", cut = 2)
+
+##
+val = c("KLF6_GSE115763", "EPAS1_GSE115389")
+db_res <- merge(allre, db, by.x = "gene", by.y = "Symbol")
+out <- stat_DE(x=db_res, y=val, f=0.1, fc=0.5)
+
+###
+tab <- process_Chip_density("/Users/chineduanene/Documents/ACSNI/2.Data/ATF4-case/CHIP")
+out <- stat_chip_global(x=allre, y=names(tab[2:9]), chip=tab)
+out$Method <- "all"
+
+f_out <- out
+f_out <- rbind(f_out, out)
+write.csv(f_out, file = "ATF_DIMREMETH.csv", row.names = F)
+
+# Get the overlap too
+pca <- pca[c(1, 3)]
+names(ae)[2] <- "AE"
+overlpa <- merge(ae, pca, by = "gene")
+overlpa <- merge(overlpa, nmf, by = "gene")
+overlpa$suu <- rowSums(overlpa[-1] == "P")
+overlpa$ae_pca <- rowSums(overlpa[2:3] == "P")
+overlpa$ae_nmf <- rowSums(overlpa[c(2,4)] == "P")
+overlpa$pca_nmf <- rowSums(overlpa[3:4] == "P")
+
+# number of predicted MTOR case
+ae = 1150
+pca = 1
+nmf = 16
+all = 1166
+# diagram
+all = 0
+ae_pca = 0
+ae_nmf = 0
+pca_nmf = 1
+
+
+## number of predicted for mTOR case
+ae = 699
+pca = 237
+nmf = 157
+all = 912
+# STAT FILE IS f_out
+# diagram
+all = 44
+ae_pca = 69
+ae_nmf = 55
+pca_nmf = 101
+
+### Generate plots
+grid.newpage()
+draw.triple.venn(area1 = 699, area2 = 237, area3 = 157, n12 = 69, n13 = 55, n23 = 101, n123 = 44,
+                 category = c("AE", "PCA", "NMF") ,
+                   cat.col = c("black", "black", "black"),
+                # lty = "blank",
+                 fill = NULL,
+                 scaled = F)
+
+plot <- plot[plot$Method != "all",]
+
+# Benchmark plot
+ggpubr::ggbarplot(plot, x = "TF", y = "ACSNI",
+                  fill = "Method",
+                  #add = "mean_se",
+                  width = 0.6,
+                  size = 0.4,
+                  lab.size = 1,
+                  ylab = "Enrichment (P/B)",
+                  xlab = "Gene",
+                  palette = c("orange", rev(blues9)),
+                  sort.by.groups = T,
+                  position = position_dodge(0.9),
+                  ggtheme = theme_minimal(),
+                  lab.pos = "out",
+                  x.text.angle = 90,
+                  order = c("JUNB", "CEBPD", "NFE2L2",
+                            "JUN", "IRF1", "RELA", "ERG", "EP300")
+)
+
+
+ggpubr::ggbarplot(plot, x = "Signal", y = "ACSNI",
+                  fill = "Method",
+                  #add = "mean_se",
+                  width = 0.6,
+                  size = 0.4,
+                  lab.size = 1,
+                  ylab = "Enrichment (P/B)",
+                  xlab = "Gene",
+                  palette = c("orange", rev(blues9)),
+                  sort.by.groups = T,
+                  position = position_dodge(0.9),
+                  ggtheme = theme_minimal(),
+                  lab.pos = "out",
+                  x.text.angle = 90
+)
+

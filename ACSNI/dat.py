@@ -4,26 +4,36 @@ Author: Chinedu A. Anene, Phd
 """
 
 import pandas as pd
-from pandas import DataFrame as Dff
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import random, string, sys
 
 
-def get_col_names(file_s):
+def get_col_names(x):
     """
-    Get numeric columns
+    Get names of numeric columns
 
     Parameters
     ----------
-    file_s: Expression matrix with gene names
-
-    Returns
-    -------
-    names: Names of numeric columns
+    x: Matrix
     """
+    return x.select_dtypes([np.number]).columns
 
-    return [col for col in file_s.columns if col not in ["gene"]]
+def get_row_index(x):
+    """
+    Get name of the row index.
+    Throw error if there are more than categorical column.
+
+    Parameters
+    ----------
+    x: Matrix
+    """
+    id_name = x.select_dtypes([np.object]).columns
+
+    if len(id_name) != 1:
+        sys.exit("ERROR: Make sure there just one ID column")
+
+    return id_name
 
 def remove_unexpressed(df):
     """
@@ -59,18 +69,17 @@ def filter_uninformative(df, mad_f):
     temp: Filtered expression matrix
     """
 
-    print("Filtering uninformative genes by MAD")
     i_gene_len = len(df)
     if i_gene_len == 0:
-        sys.exit("Please, include column with gene name in the matrix")
+        sys.exit("ERROR: Include column with gene name in the matrix")
     else:
         x = df.select_dtypes(include=["number"]).copy()
         row_deviance = x.sub(x.median(axis=1), axis=0)
         mad_row = np.abs(row_deviance).median(axis=1)
-
         temp = df[mad_row >= mad_f]
-        if temp.shape[0] <= (i_gene_len/4):
-            sys.exit(">25% uninformative genes. Please, "
+
+        if temp.shape[0] <= (i_gene_len/10):
+            sys.exit(">90% uninformative genes. Please, "
                      "check the expression matrix or reduce -m. "
                      "Use pre-filtered matrix if appropriate")
         else:
@@ -91,10 +100,11 @@ def get_scaled_values(file_ss):
     """
 
     cols = get_col_names(file_ss)
+    id_name = get_row_index(file_ss)
     scale = MinMaxScaler(feature_range=(0, 1))
-    x = Dff(scale.fit_transform(file_ss[cols]))
-    out = Dff(np.array(file_ss["gene"]))
-    out.columns = ["gene"]
+    x = pd.DataFrame(scale.fit_transform(file_ss[cols]))
+    out = pd.DataFrame(np.array(file_ss[id_name]))
+    out.columns = ["name"]
     res = pd.concat([out, x], axis=1)
     return res
 
@@ -112,9 +122,12 @@ def gene_sets(prior):
     """
 
     cols = get_col_names(prior)
+    id_name = get_row_index(prior)
+    prior = prior.rename(columns={id_name[0]: "name"})
+
     gene_set = {}
     for i in cols:
-        gene_set[i] = pd.DataFrame(prior[prior[i] == 1]["gene"])
+        gene_set[i] = pd.DataFrame(prior[prior[i] == 1]["name"])
     return gene_set
 
 def scale_first(input_file, d_list):
@@ -132,9 +145,8 @@ def scale_first(input_file, d_list):
     y: Gene names
     """
 
-    print("Processing the prior expression profiles")
-    temp = pd.merge(get_scaled_values(input_file), d_list, how="inner", on="gene")
-    print("Found {} genes from the set in the expression matrix".format(temp.shape[0]))
+    temp = pd.merge(get_scaled_values(input_file), d_list, how="inner", on="name")
+    print("Found {} of the gene set in the expression".format(temp.shape[0]))
 
     if temp.shape[0] <= 11:
         sys.exit("Fewer than 12 genes in the set, use the f 2 option "
@@ -144,7 +156,7 @@ def scale_first(input_file, d_list):
         x = temp[cols]
         x = x.reindex(columns=sorted(x.columns))
         x = np.array(x)
-        y = temp["gene"]
+        y = temp["name"]
     return x, y
 
 def scale_second(input_file):
@@ -162,9 +174,10 @@ def scale_second(input_file):
     """
 
     cols = get_col_names(input_file)
+    id_name = get_row_index(input_file)
     x = input_file[cols]
     x = x.reindex(columns=sorted(x.columns))
-    y = input_file["gene"]
+    y = input_file[id_name]
     return y, x
 
 def get_model_weights(w, y_train):
@@ -181,8 +194,8 @@ def get_model_weights(w, y_train):
     w_nn1: Formatted weight matrix
     """
 
-    nn = Dff(y_train)
-    w_nn = pd.merge(nn, w, how="left", on="gene")
+    nn = pd.DataFrame(y_train)
+    w_nn = pd.merge(nn, w, how="left", on="name")
     w_nn["w"] = w_nn["w"].fillna(0)
     w_nn1 = w_nn["w"]
     return w_nn1

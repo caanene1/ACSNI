@@ -1,6 +1,7 @@
 # ACSNI
 Automatic context-specific network inference
 
+
 Determining tissue- and disease-specific circuit of biological pathways remains a fundamental goal of molecular biology.
 Many components of these biological pathways still remain unknown, hindering the full and accurate characterisation of 
 biological processes of interest. ACSNI leverages artificial intelligence for the reconstruction of a biological pathway,
@@ -59,6 +60,32 @@ The tool can handle multiple pathway columns in the ```-t``` file as below.
 Note: Each pathway above is analysed independently, and the outputs have no in-built relationship.
 The tool is designed to get a granular view of a single pathway at a time.   
 
+# Output ACSNI-run
+Database (.ptl)
+
+| Content | Information |
+| --- | --- |
+| co | Pathway Code|
+|  w | Subprocess space | 
+|  n  | Interaction scores | 
+|  p  | Score classification |
+|  d  | Interaction direction |
+| run_info | Run parameters |
+| methods | Extractor functions |
+
+Predicted Network (.csv)
+
+| Content | Meaning |
+| --- | --- |
+| name | Gene |
+|  sub | Subprocess |
+|  direction  | Direction of interactions with subprocess |
+
+Null (.csv) {Shuffled expression matrix}
+
+
+
+
 
 # Input ACSNI-derive
 
@@ -89,6 +116,29 @@ Correlation file (Optional) - The correlation file (.csv) specified by ```-u```,
 | SNHG12  |  0.80  |
 | RNU1-114P  |  0.72  |
 
+# Output ACSNI-derive
+Database (.ptl)
+
+| Content | Information |
+| --- | --- |
+| co | Pathway Code|
+|  n  | Interaction scores |
+|  d  | Interaction direction |
+|  ac  | Correlation and T test results |
+|  fd | Unfiltered prediction data | 
+| run_info | Run parameters |
+| methods | Extractor functions |
+
+Predicted (.csv)
+
+| Content | Meaning |
+| --- | --- |
+| name | Gene |
+|  predict |  Classification of genes|
+
+Null (.csv) {Shuffled expression matrix}
+
+
 # Input ACSNI-get
 
 ACSNI database - Output of ACSNI-run (.ptl) specified by ```-r```.
@@ -98,11 +148,15 @@ The sample IDs should match the IDs in the ```-i``` analysed by ACSNI-run.
 
 Variable type - The type of phenotype i.e "numeric" or "character", specified by ```-c```.
 
+Outputs the strength of the associations across the subprocesses (.csv).
+
 # Input ACSNI-split 
 
 Expression Matrix - See ``-i``` description above.
 
 Number of splits - The number of independent cohorts to generate from `-i```.
+
+Outputs the data splits in the current working directory.
 
 # Extras
 Example files representing the datasets analysed in the paper are included inside the folder "Resources".
@@ -113,3 +167,7 @@ Example runs are inside the folder "sh".
 
 # To clone the source repository
 git clone https://github.com/caanene1/ACSNI
+
+# Citation
+ACSNI: An unsupervised machine-learning tool for prediction of tissue-specific pathway components using gene expression profiles 
+Chinedu Anthony Anene, Faraz Khan, Findlay Bewicke-Copley, Eleni Maniati and Jun Wang

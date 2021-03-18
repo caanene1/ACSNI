@@ -7,7 +7,43 @@ import sys
 import os
 import pandas as pd
 import numpy as np
-from ACSNI import dat, corep, dbs
+from scipy.stats import ttest_ind
+from ACSNI import dat, dbs
+from ACSNI.corep import main_model_prediction
+
+
+def cont_method(x, y):
+    """
+    Control methods {supervised}.
+
+    Parameters
+    ----------
+    x: matrix
+    y: target name
+
+    Returns
+    -------
+    res: results matrix
+    """
+
+    xx = x.copy().T
+    cols = dat.get_col_names(xx)
+    xx["group"] = pd.cut(xx[y], bins=[np.min(xx[y]),
+                                                   np.median(xx[y]),
+                                                   np.max(xx[y])],
+                            labels=["Low", "High"], include_lowest=True)
+
+    res =  pd.DataFrame()
+    for t in cols:
+        x1 = np.array(xx[xx["group"] == "High"][t])
+        y1 = np.array(xx[xx["group"] == "Low"][t])
+        _, de = ttest_ind(x1, y1)
+
+        de = np.array([de])
+        frame1 = pd.DataFrame(de, index=[t])
+        res = pd.concat([res, frame1], axis=0)
+    res.rename(columns={0: "de.p"}, inplace=True)
+    return res
 
 
 def merge_minimal_derive(x):
@@ -49,10 +85,18 @@ def get_ascni(prior_m, expression_m, mad, p, s, a, nn=".csv"):
     """
     print("Searching")
 
+    run_info = {
+        "m": mad, "b": 1, "c": a,
+        "p": p, "f": 0, "i": nn, "t": None,
+        "w": None, "s": s}
+
     re = list()
     for i in prior_m:
-        res = corep.run_minimal(prior_m=prior_m[i], gi=i, expression_m=expression_m,
-                                w=None, mad=mad, f=0, p=p, s=s, a=a, nn=nn)
+        res = main_model_prediction(inp=expression_m,
+                                        d_list=prior_m[i],
+                                        gi=i, lp=p, s=s,
+                                        run=run_info)
+
         re.append(res)
 
     re = merge_minimal_derive(re)
@@ -126,12 +170,16 @@ def get_cor(exp_m, cbtype, goi, madf, cort, corf, biotypefilter=False,
 
     else:
         gcor = esub.corrwith(esub.loc[goi], axis=1, drop=False, method='pearson')
+        gde = cont_method(esub, goi)
         gcor = gcor.to_frame()
         gcor.columns = ['cor']
         gcor['gene'] = gcor.index
         gcor = gcor[['gene', 'cor']]
+        cor_de = pd.concat([gcor, gde], axis=1)
         gcor.sort_values(by=['cor'], inplace=True, ascending=False)
-        gcor.to_csv("AC.csv", index=False, header=True)
+        cor_de.sort_values(by=['cor'], inplace=True, ascending=False)
+        cor_de.to_csv("AC.csv", index=False, header=True)
+
         if cort < 0.6:
             sys.exit("Choose correlation threshold >= 0.6")
         gcor = gcor[abs(gcor['cor']) > cort]

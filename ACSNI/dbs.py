@@ -4,7 +4,10 @@ Author: Chinedu A. Anene, Phd
 """
 
 import pandas as pd
+from sklearn.linear_model import LinearRegression,LogisticRegression
+import numpy as np
 import pickle
+import sys
 
 
 class AcsniResults:
@@ -18,6 +21,8 @@ class AcsniResults:
       self.n = n
       self.p = p
       self.d = d
+      self.__lm_w = None
+      self.__nm = None
       self.run_info = run_info
 
   def __str__(self):
@@ -47,7 +52,9 @@ class AcsniResults:
       return self.run_info
 
   def get_global_prediction(self):
-      gr = pd.concat([self.p["gene"],
+      gr = self.p.copy()
+      gr["name"] = gr.index
+      gr = pd.concat([self.p["name"],
                       self.p.select_dtypes(include=["number", "float", "int"]).copy()],
                      axis=1)
       return gr
@@ -66,22 +73,81 @@ class AcsniResults:
   def get_sub_process_network(self, c):
       n_p = self.p.loc[self.p["Sum_stat"] >= c]
       n_p = n_p.select_dtypes(exclude=["number", "float", "int"]).copy()
-      n_p = n_p.melt(id_vars="gene", var_name="sub", value_name="Predicted")
+      n_p["name"] = n_p.index
+      n_p = n_p.melt(id_vars="name", var_name="sub", value_name="Predicted")
       n_p = n_p.loc[n_p["Predicted"] == "P"]
       n_p["Set"] = "w" + n_p["sub"].astype(str)
-      n_p = n_p[["gene", "sub", "Set"]]
+      n_p = n_p[["name", "sub", "Set"]]
       return n_p
 
   def add_sub_process_direction(self, c):
       n_p = self.get_sub_process_network(c)
-      n_p["match"] = n_p["gene"] + n_p["Set"]
-      d_p = self.d.melt(id_vars="gene", var_name="sub", value_name="Direction")
+      n_p["match"] = n_p["name"] + n_p["Set"]
+      self.d["name"] = self.d.index
+      d_p = self.d.melt(id_vars="name", var_name="sub", value_name="Direction")
       d_p["Set"] = "w" + d_p["sub"].astype(str)
-      d_p["match"] = d_p["gene"] + d_p["Set"]
+      d_p["match"] = d_p["name"] + d_p["Set"]
       d_p = d_p.loc[d_p["match"].isin(n_p["match"])]
       d_p = d_p[["Direction", "match"]]
       n_p = pd.merge(n_p, d_p, how="left", on="match")
-      return n_p
+      return n_p[["name", "sub", "Direction"]]
+
+  def get_explained_variation(self, t, c):
+      """
+      Get level of interaction between phenotype and subprocesses.
+
+      """
+
+      self.__nm = t.loc[:, t.columns != "ID"].columns[0]
+
+      weights = self.w.select_dtypes(include=["number", "float", "int"]).columns
+      lm_w = pd.DataFrame({"sub": weights})
+
+      lm_g = []
+      for i in weights:
+          x = np.array(self.w[i]).reshape(-1, 1)
+          y = self.w[[self.__nm]].values.ravel()
+
+          if c == "character":
+              lm_r = LogisticRegression(n_jobs=-1)
+          elif c == "numeric":
+              lm_r = LinearRegression(n_jobs=-1)
+          else:
+              sys.exit("Invalid value set for parameter -c. "
+                       "Use numeric or character for the type of phenotype")
+
+          lm_r.fit(x, y)
+          lm_r.score(x, y)
+          lm_g.append(lm_r.score(x, y))
+      lm_g = pd.DataFrame(lm_g)
+      self.__lm_w = pd.concat([lm_w, lm_g], axis=1)
+      return
+
+  def get_summary_stat_phenotype(self, t, c):
+      """
+      Phenotype association statistics
+      Parameters
+      ----------
+      t: phenotype file
+      c: Type of variable
+
+      Returns
+      -------
+      results and name
+
+      """
+
+      self.get_explained_variation(t, c)
+      qq = self.__lm_w[[0]].quantile([.25, .75])
+      q25 = qq.loc[0.25, 0]
+      q75 = qq.loc[0.75, 0]
+
+      m = float(self.__lm_w[[0]].mean())
+      sd = float(self.__lm_w[[0]].std())
+      print("Statistics of variations in subprocesses explained by {}".format(self.__nm))
+      print("q25 {} \n q75 {} \n mean {} \n std {}".format(q25, q75, m, sd))
+      self.__lm_w["Association"] = np.where(self.__lm_w[0] >= q75, "Strong", "Weak")
+      return self.__lm_w, self.__nm
 
 
 class ACSNIDeriveResults:

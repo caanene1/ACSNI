@@ -60,7 +60,7 @@ i_corr = args["corr_file"]
 # Argument store
 run_info = {
     "i": i_dat, "g": i_gene, "f": i_bio_file,
-    "b": i_bio_type, "m": i_mad, "p": p_layer,
+    "b": i_bio_type, "m": i_mad, "pp": p_layer,
     "c": i_alpha, "ex": i_ex, "t": i_ct,
     "z": i_pc, "u": i_corr }
 
@@ -80,14 +80,14 @@ elif i_bio_file is not None and i_bio_type is not None:
     biotype_file = pd.DataFrame(data=biotype_file)
 
     if biotype_file.columns[0] != 'gene' or biotype_file.columns[1] != 'biotype':
-        sys.exit("Make sure the column names and the order of the biotype "
+        sys.exit("ERROR: Make sure the column names and the order of the biotype "
                  "file is in the right format: 'gene','biotype'")
     else:
         gpb = biotype_file['gene'].str.contains(i_gene).sum()
         if gpb <= 0:
-            sys.exit("Gene not found in Biotype file")
+            sys.exit("ERROR: Gene not found in Biotype file")
 else:
-    sys.exit("Biotype file and Biotype filter threshold must be provided if you "
+    sys.exit("ERROR: Biotype file and Biotype filter threshold must be provided if you "
              "intend to filter. Else leave the -f and -b parameters as default")
 
 
@@ -102,14 +102,14 @@ elif i_corr is not None:
     corr_file = pd.DataFrame(data=corr_file)
 
     if corr_file.columns[0] != 'gene' or corr_file.columns[1] != 'cor':
-        sys.exit("Make sure the column names and the order of the correlation file "
+        sys.exit("ERROR: Make sure the column names and the order of the correlation file "
                  "is in the right format: 'gene','cor'")
     else:
         gpb=corr_file['gene'].str.contains(i_gene).sum()
         if gpb <= 0:
             sys.exit("Gene not found in Correlation file")
 else:
-    sys.exit("Correlation file must be provided if you intend to use modified gene set "
+    sys.exit("ERROR: Correlation file must be provided if you intend to use modified gene set "
              "for the generation of prior matrix 1. Else leave the -u/--corr_file parameter as default")
 
 
@@ -122,7 +122,7 @@ pa_re = i_gene + i_dat[:-4] + "-" + dat.name_generator(7)
 
 if not os.path.isdir(pa_re):
     os.mkdir(pa_re)
-    print("Results will be saved to {}".format(pa_re))
+    print("ERROR: Results will be saved to {}".format(pa_re))
     os.chdir(os.path.join(os.getcwd(), pa_re))
 else:
     os.chdir(os.path.join(os.getcwd(), pa_re))
@@ -133,7 +133,7 @@ else:
 exp_dat = pd.DataFrame(data=exp_dat)
 gpe=exp_dat['gene'].str.contains(i_gene).sum()
 if gpe <= 0:
-    sys.exit("Gene not found in Expression matrix")
+    sys.exit("ERROR: Gene not found in Expression matrix")
 
 
 ##############################################################################
@@ -141,6 +141,9 @@ if gpe <= 0:
 gcor = utility.get_cor(exp_m=exp_dat, biotypef=biotype_file, cbtype=i_bio_type,
                        madf=i_mad, goi=i_gene, cort=i_ct, corf=corr_file,
                        biotypefilter=bf, docor=bc)
+
+p_layer = gcor.shape[0] * p_layer // 100
+run_info["p"] = p_layer
 
 np.random.seed(23)
 prior1 = utility.make_prior1(npc=i_pc, gcor=gcor)
@@ -183,7 +186,6 @@ utility.save_merged_n_d_ac_fd_co(n=nn, d=dd, ac=ac, fd=fd, path=os.getcwd(),
 
 ##############################################################################
 # Null distribution
-print("Creating null model")
 sim_mat = sim.shuffle_exp(exp_dat)
 sim_mat.to_csv("NULL_{}".format(i_dat), index=True)
 
