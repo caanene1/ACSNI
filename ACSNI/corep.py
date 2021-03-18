@@ -155,6 +155,6 @@ def merge_minimal_out(x, nn):
 
     mse = x[0]
     for i in x[1:]:
-        mse = pd.merge(mse, i, how="outer", on="gene")
+        mse = pd.merge(mse, i, how="outer", on="name")
     mse.to_csv("predicted_{}.csv".format(nn), index=False)
     return

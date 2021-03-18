@@ -61,7 +61,7 @@ def merge_minimal_derive(x):
 
     mse = x[0]
     for i in x[1:]:
-        mse = pd.merge(mse, i, how="outer", on="gene")
+        mse = pd.merge(mse, i, how="outer", on="name")
     return mse
 
 def get_ascni(prior_m, expression_m, mad, p, s, a, nn=".csv"):
@@ -141,7 +141,7 @@ def get_cor(exp_m, cbtype, goi, madf, cort, corf, biotypefilter=False,
     mtb=esub['gene'].str.contains(goi).sum()
 
     if mtb <= 0:
-        sys.exit("Gene did not pass the MAD threshold. Try setting a"
+        sys.exit("Gene did not pass the MAD threshold. Try setting a "
         "lower value for -m/--mt, >= 1")
     esub = esub.dropna(how='any')
     esub.set_index('gene', inplace=True)
@@ -158,7 +158,7 @@ def get_cor(exp_m, cbtype, goi, madf, cort, corf, biotypefilter=False,
         gcor = gcor[abs(gcor['cor']) > cort]
 
         if len(gcor.index) < 19:
-            sys.exit("You don't have enough genes that show correlation"
+            sys.exit("You don't have enough genes that show correlation "
             "above your set threshold. Try setting a lower correlation threshold")
 
         if len(gcor.index) > 50:
@@ -245,14 +245,14 @@ def preprocess_run_one(pf, biotypefilter=False, biotypef=False, exclude=None):
     """
 
     predicf = pd.DataFrame(data=pf)
-    predicf.set_index('gene', inplace=True)
+    predicf.set_index('name', inplace=True)
     predicf.index.name = None
     predicf = predicf[predicf.sum(axis=1) >= 1]
     predicf.iloc[predicf > 0] = 1
 
     if biotypefilter:
         bsub2 = biotypef[~biotypef['biotype'].isin(exclude)]
-        predicf = predicf[predicf.index.isin(bsub2['gene'])]
+        predicf = predicf[predicf.index.isin(bsub2['name'])]
     predicf.sort_index(inplace=True)
     return predicf
 
@@ -318,7 +318,7 @@ def make_prior2(hc, gt):
     goiindex = [gt]
     goi = pd.DataFrame([[1, 0]], columns=cc2, index=goiindex)
     prior2 = goi.append(prior2)
-    prior2.insert(0, 'gene', prior2.index)
+    prior2.insert(0, 'name', prior2.index)
     return prior2
 
 def preprocess_run_two(pf2):
@@ -335,7 +335,7 @@ def preprocess_run_two(pf2):
 
     """
     predicf2 = pd.DataFrame(data=pf2)
-    predicf2.set_index('gene', inplace=True)
+    predicf2.set_index('name', inplace=True)
     predicf2.index.name = None
     predicf2 = predicf2[predicf2.sum(axis=1) >= 1]
     predicf2.iloc[predicf2 > 0] = 1
@@ -396,10 +396,10 @@ def merge_multi(path):
         else:
            pass
 
-    nn = [i.set_index('gene') for i in nn]
+    nn = [i.set_index('name') for i in nn]
     nn = pd.concat(nn, axis=1)
 
-    dd = [i.set_index('gene') for i in dd]
+    dd = [i.set_index('name') for i in dd]
     dd = pd.concat(dd, axis=1)
 
     co = pd.concat(co, axis=1)
@@ -430,7 +430,6 @@ def save_merged_n_d_ac_fd_co(n, d, ac, fd, co, path, nfile, run_info):
     ac.to_csv("AC_{}".format(nfile), index=True)
     fd.to_csv("FD_{}".format(nfile), index=True)
     co.to_csv("code_{}".format(nfile), index=True)
-
 
     dbs_results = dbs.ACSNIDeriveResults(ac=pd.read_csv(os.path.join(path, "AC_{}".format(nfile))),
                                    n=pd.read_csv(os.path.join(path, "N_{}".format(nfile))),

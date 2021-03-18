@@ -11,8 +11,7 @@ import pandas as pd
 import numpy as np
 from tensorflow.random import set_seed
 from ACSNI import dat, utility, sim
-import os
-import sys
+import os, sys, gc
 
 pd.options.mode.chained_assignment = None
 
@@ -57,6 +56,8 @@ i_ct = args["ct"]
 i_pc = args["pc"]
 i_corr = args["corr_file"]
 
+
+
 # Argument store
 run_info = {
     "i": i_dat, "g": i_gene, "f": i_bio_file,
@@ -81,7 +82,7 @@ elif i_bio_file is not None and i_bio_type is not None:
 
     if biotype_file.columns[0] != 'gene' or biotype_file.columns[1] != 'biotype':
         sys.exit("ERROR: Make sure the column names and the order of the biotype "
-                 "file is in the right format: 'gene','biotype'")
+                 " file is in the right format: 'gene','biotype'")
     else:
         gpb = biotype_file['gene'].str.contains(i_gene).sum()
         if gpb <= 0:
@@ -122,7 +123,7 @@ pa_re = i_gene + i_dat[:-4] + "-" + dat.name_generator(7)
 
 if not os.path.isdir(pa_re):
     os.mkdir(pa_re)
-    print("ERROR: Results will be saved to {}".format(pa_re))
+    print("Results will be saved to {}".format(pa_re))
     os.chdir(os.path.join(os.getcwd(), pa_re))
 else:
     os.chdir(os.path.join(os.getcwd(), pa_re))
@@ -183,12 +184,10 @@ nn, dd, ac, fd, co = utility.merge_multi(os.getcwd())
 utility.save_merged_n_d_ac_fd_co(n=nn, d=dd, ac=ac, fd=fd, path=os.getcwd(),
                                  nfile=i_dat, co=co, run_info=run_info)
 
-
 ##############################################################################
 # Null distribution
 sim_mat = sim.shuffle_exp(exp_dat)
 sim_mat.to_csv("NULL_{}".format(i_dat), index=True)
 
 # Collect garbage
-import gc
 gc.collect()

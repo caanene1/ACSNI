@@ -11,3 +11,5 @@ ACSNI-derive -f grch38_biotype.csv -b lncRNA
              -m 1.2 -g ENSG00000233429
              -ct 0.80 -pc 5 --ex exclude.csv
 
+
+ACSNI-derive  -i GTEx_K.csv -m 1.2 -g ENSG00000233429 

@@ -146,7 +146,7 @@ def scale_first(input_file, d_list):
     """
 
     temp = pd.merge(get_scaled_values(input_file), d_list, how="inner", on="name")
-    print("Found {} of the gene set in the expression".format(temp.shape[0]))
+    print("Geneset with {} genes in the expression".format(temp.shape[0]))
 
     if temp.shape[0] <= 11:
         sys.exit("Fewer than 12 genes in the set, use the f 2 option "

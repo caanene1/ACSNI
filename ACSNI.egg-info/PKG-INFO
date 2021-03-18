@@ -1,11 +1,12 @@
 Metadata-Version: 2.1
 Name: ACSNI
-Version: 1.0.0
+Version: 1.0.1
 Summary: automatic context-specific network inference
 Home-page: https://github.com/caanene1/ACSNI
 Author: Chinedu A. Anene
 Author-email: caanenedr@outlook.com
 License: UNKNOWN
+Download-URL: https://github.com/caanene1/ACSNI/releases/download/1.0.0/ACSNI-1.0.1-py3-none-any.whl
 Description: # ACSNI
         Automatic context-specific network inference
         

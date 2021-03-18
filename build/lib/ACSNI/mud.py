@@ -3,6 +3,7 @@ Name: ACSNI-model
 Author: Chinedu A. Anene, Phd
 """
 from sklearn.decomposition import PCA, NMF
+import warnings
 from sklearn import metrics
 from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.layers import Input, Dense
@@ -66,6 +67,7 @@ class DimRed:
       self.__median = self.__median.add_prefix('MEDIAN_' + self.__run_id + '_')
       return
 
+
   def lde(self):
       """
       Decompose with PCA and NMF
@@ -77,6 +79,8 @@ class DimRed:
       pc_weights = pc_weights.add_prefix('PCA_' + self.__run_id + '_')
 
       opti_rank = []
+      #
+      warnings.filterwarnings('ignore')
       for k in range(2, self.__r):
           nmf = NMF(n_components=k, max_iter=1000).fit(self.x)
           score_it = self.__get_score(nmf, self.x)
@@ -84,12 +88,17 @@ class DimRed:
           if score_it >= 0.95:
               break
 
+
       self.nmf = NMF(n_components=len(opti_rank) + 1, max_iter=10000)
       self.nmf.fit(self.x)
+      warnings.resetwarnings()
+      #
+
       nmf_weights = pd.DataFrame(self.nmf.components_.T)
       nmf_weights = nmf_weights.add_prefix('NMF_' + self.__run_id + '_')
 
       self.__pcanmf = pd.concat([pc_weights, nmf_weights], axis=1)
+
       return
 
   def __de4ae(self, y):
