@@ -1,0 +1,51 @@
+#!python
+
+import argparse
+from pandas import read_csv
+import pickle
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-r', '--result', type=str,
+                    help='ACSNI results database', default='dbs.ptl')
+parser.add_argument('-v', '--phy', type=str,
+                    help='Target phenotype to extract prediction', default='Phenotype.csv')
+parser.add_argument('-c', '--cla', type=str,
+                    help='The data type of the target phenotype ["numeric" or "character"]', default='character')
+parser.add_argument('-i', '--inter', type=str,
+                    help='Character specifying information to extract from database', default=None)
+args = parser.parse_args()
+
+
+inp = args.result
+eno = args.phy
+cla_ss = args.cla
+base_access = args.inter
+
+##
+r_dbs = pickle.load(open(inp, "rb"))
+
+if base_access is None:
+    phy = read_csv(eno)
+    results, names_tar = r_dbs.get_summary_stat_phenotype(t=phy, c=cla_ss)
+    results.to_csv("{}_to subprocess associations.csv".format(names_tar), index=False)
+
+
+
+else:
+    if base_access == "N" or base_access == "n":
+        output = r_dbs.get_n()
+    elif base_access == "P" or base_access == "p":
+        output = r_dbs.get_p()
+    elif base_access == "P" or base_access == "p":
+        output = r_dbs.get_p()
+    elif base_access == "W" or base_access == "w":
+        output = r_dbs.get_w()
+    elif base_access == "D" or base_access == "d":
+        output = r_dbs.get_d()
+    else :
+        output = r_dbs.get_co()
+
+    output.to_csv("{}_{}.csv".format(base_access, inp), index=False)
+
+

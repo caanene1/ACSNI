@@ -17,7 +17,7 @@ setuptools.setup(
     description="automatic context-specific network inference",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/caanene1/ACSNI",
+    url="https://github.com/caanene1/ACSNI/release",
     packages=setuptools.find_packages(include=["ACSNI", "ACSNI.SRC"]),
     include_package_data=True,
     classifiers=[
