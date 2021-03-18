@@ -1,12 +1,12 @@
 # ACSNI
 Automatic context-specific network inference
 
-https://github.com/caanene1/ACSNI/blob/master/workflow.png
-
 Determining tissue- and disease-specific circuit of biological pathways remains a fundamental goal of molecular biology.
 Many components of these biological pathways still remain unknown, hindering the full and accurate characterisation of 
 biological processes of interest. ACSNI leverages artificial intelligence for the reconstruction of a biological pathway,
 aids the discovery of pathway components and classification of the crosstalk between pathways in specific tissues.
+
+![workflow](https://user-images.githubusercontent.com/44468440/111686911-916bee00-8821-11eb-9b96-e2cefc93f3cf.png)
 
 This tool is built in python3 with tensorflow backend and keras functional API.
 
