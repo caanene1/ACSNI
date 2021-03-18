@@ -393,8 +393,6 @@ def merge_multi(path):
         elif i.startswith("code"):
             co.append(pd.read_csv(os.path.join(path, i)))
             os.remove(os.path.join(path, i))
-        elif i.endswith("_model.h5"):
-            os.remove(os.path.join(path, i))
         else:
            pass
 
@@ -443,6 +441,10 @@ def save_merged_n_d_ac_fd_co(n, d, ac, fd, co, path, nfile, run_info):
 
     for i in ["AC", "N", "D","FD","code"]:
         os.remove(os.path.join(path, "{}_{}".format(i, nfile)))
+
+    mf = [f for f in os.listdir(path) if f.endswith(".h5")]
+    for m in mf:
+        os.remove(os.path.join(path, m))
 
     dbs.save_acsni(dbs_results, ("dbs" + nfile[:-4] + ".ptl"))
     return

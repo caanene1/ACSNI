@@ -1,6 +1,7 @@
 # ACSNI
 Automatic context-specific network inference
 
+https://github.com/caanene1/ACSNI/blob/master/WorkFlow.png
 
 Determining tissue- and disease-specific circuit of biological pathways remains a fundamental goal of molecular biology.
 Many components of these biological pathways still remain unknown, hindering the full and accurate characterisation of 
