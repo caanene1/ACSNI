@@ -17,7 +17,8 @@ setuptools.setup(
     description="automatic context-specific network inference",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/caanene1/ACSNI/release",
+    url="https://github.com/caanene1/ACSNI",
+    download_url = "https://github.com/caanene1/ACSNI/releases/download/1.0.0/ACSNI-1.0.0-py3-none-any.whl",
     packages=setuptools.find_packages(include=["ACSNI", "ACSNI.SRC"]),
     include_package_data=True,
     classifiers=[
@@ -30,3 +31,4 @@ setuptools.setup(
 )
 
 # Build this package with >> python3 setup.py sdist bdist_wheel
+# Upload to pypi with >> sudo twine upload dist/*

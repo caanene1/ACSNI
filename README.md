@@ -6,7 +6,7 @@ Many components of these biological pathways still remain unknown, hindering the
 biological processes of interest. ACSNI leverages artificial intelligence for the reconstruction of a biological pathway,
 aids the discovery of pathway components and classification of the crosstalk between pathways in specific tissues.
 
-![workflow](https://user-images.githubusercontent.com/44468440/111686911-916bee00-8821-11eb-9b96-e2cefc93f3cf.png)
+![workflow](https://user-images.githubusercontent.com/44468440/111687762-92e9e600-8822-11eb-8d59-38d08a95d115.png)
 
 This tool is built in python3 with tensorflow backend and keras functional API.
 

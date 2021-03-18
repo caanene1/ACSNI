@@ -3,7 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="20184109-87a7-4321-a9ed-9acf42775cc0" name="Default Changelist" comment="Update Major">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACSNI.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/ACSNI.egg-info/PKG-INFO" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WorkFlow.png" beforeDir="false" afterPath="$PROJECT_DIR$/WorkFlow.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/ACSNI-run" beforeDir="false" afterPath="$PROJECT_DIR$/bin/ACSNI-run" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/scripts-3.8/ACSNI-run" beforeDir="false" afterPath="$PROJECT_DIR$/build/scripts-3.8/ACSNI-run" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/ACSNI-1.0.0-py3-none-any.whl" beforeDir="false" afterPath="$PROJECT_DIR$/dist/ACSNI-1.0.0-py3-none-any.whl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/ACSNI-1.0.0.tar.gz" beforeDir="false" afterPath="$PROJECT_DIR$/dist/ACSNI-1.0.0.tar.gz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

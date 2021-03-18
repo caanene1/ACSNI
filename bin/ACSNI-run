@@ -56,18 +56,6 @@ sd = int(args.seed)
 alpha_cut = args.alpha
 
 
-mad_f = 2.5
-bb = 3
-lp = 0
-fu = 1
-inp = "TCGA_.csv"
-pr = "mTOR.csv"
-tf = None
-sd = 68
-alpha_cut = 0.01
-
-
-# Argument store
 run_info = {
     "m": mad_f, "b": bb, "c": alpha_cut,
     "p": lp, "f": fu, "i": inp, "t": pr,
