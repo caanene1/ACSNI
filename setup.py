@@ -9,7 +9,7 @@ with open("requirements.txt") as rq:
 
 setuptools.setup(
     name="ACSNI",
-    version="1.0.2",
+    version="1.0.3",
     scripts=["bin/ACSNI-run", "bin/ACSNI-derive", "bin/ACSNI-get", "bin/ACSNI-split"],
     author="Chinedu A. Anene",
     collaborator="Faraz Khan",
@@ -18,7 +18,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/caanene1/ACSNI",
-    download_url = "https://github.com/caanene1/ACSNI/releases/download/1.0.1/ACSNI-1.0.2-py3-none-any.whl",
+    download_url = "https://github.com/caanene1/ACSNI/releases/download/1.0.1/ACSNI-1.0.3-py3-none-any.whl",
     packages=setuptools.find_packages(include=["ACSNI", "ACSNI.SRC"]),
     include_package_data=True,
     classifiers=[
@@ -30,5 +30,5 @@ setuptools.setup(
     python_requires='>=3.6',
 )
 
-# Build this package with >> python3 setup.py sdist bdist_wheel
-# Upload to pypi with >> sudo twine upload dist/*
+# Build >> python3 setup.py sdist bdist_wheel
+# Upload >> sudo twine upload dist/*

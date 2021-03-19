@@ -61,7 +61,7 @@ i_corr = args["corr_file"]
 # Argument store
 run_info = {
     "i": i_dat, "g": i_gene, "f": i_bio_file,
-    "b": i_bio_type, "m": i_mad, "pp": p_layer,
+    "b": i_bio_type, "m": i_mad, "p": p_layer,
     "c": i_alpha, "ex": i_ex, "t": i_ct,
     "z": i_pc, "u": i_corr }
 
@@ -135,12 +135,8 @@ gcor = utility.get_cor(exp_m=exp_dat, biotypef=biotype_file, cbtype=i_bio_type,
                        madf=i_mad, goi=i_gene, cort=i_ct, corf=corr_file,
                        biotypefilter=bf, docor=bc)
 
-p_layer = gcor.shape[0] * p_layer // 100
-run_info["p"] = p_layer
-
 np.random.seed(23)
 prior1 = utility.make_prior1(npc=i_pc, gcor=gcor)
-
 
 ##############################################################################
 # First iteration of ACSNI

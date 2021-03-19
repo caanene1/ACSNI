@@ -157,9 +157,10 @@ def get_ascni(prior_m, expression_m, mad, p, s, a, nn=".csv"):
 
     re = list()
     for i in prior_m:
+        in_p = prior_m[i].shape[0] * p // 100
         res = main_model_prediction(inp=expression_m,
                                         d_list=prior_m[i],
-                                        gi=i, lp=p, s=s,
+                                        gi=i, lp=in_p, s=s,
                                         run=run_info)
 
         re.append(res)
