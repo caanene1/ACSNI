@@ -6,10 +6,6 @@ ASCNI-get -r dbsTCGA_.ptl -v sample_info_kidney_norm_cancer.csv -c character
 ACSNI-run -i AA_.csv -t ATF2.csv -f 1 -p 5 -b 10 -m 1.2
 
 # Case 3: Figure 2L-N
-ACSNI-derive -f grch38_biotype.csv -b lncRNA
-             -i GTEx_kidney_exp_norerplmt_eIDs.csv
-             -m 1.2 -g ENSG00000233429
-             -ct 0.80 -pc 5 --ex exclude.csv
+ACSNI-derive -f grch38_biotype2.csv -b "lncRNA" -i GTEx_kidney_exp_norerplmt_eIDs.csv -m 1.2 -g "ENSG00000233429" --ct 0.80 --pc 5 --ex exclude.csv
 
-
-ACSNI-derive  -i GTEx_K.csv -m 1.2 -g ENSG00000233429 
+ACSNI-derive -f biotype.csv -b "lncRNA" -i expression.csv -m 1.2 -g "ENSG00000233429" --ct 0.80 --pc 5 --ex exclude.csv

@@ -12,6 +12,71 @@ from ACSNI import dat, dbs
 from ACSNI.corep import main_model_prediction
 
 
+def parse_biotype(x):
+    """
+    Process the biotype file.
+
+    Parameters
+    ----------
+    x: matrix of bio type
+
+    Returns
+    -------
+    y: processed file
+    """
+
+    if x.shape[1] != 2:
+        sys.exit("ERROR: Biotype file should have two columns of "
+                 "gene names and biotype")
+
+    x1 = len(set(x.iloc[:, 0]))
+    x2 = len(set(x.iloc[:, 1]))
+    y = pd.DataFrame()
+
+    if x1 == x2:
+        sys.exit("ERROR: Please, check the file and try again")
+
+    elif x1 > x2:
+        y['name'] = x.iloc[:, 0]
+        y['biotype'] = x.iloc[:, 1]
+
+    else:
+        y['name'] = x.iloc[:, 1]
+        y['biotype'] = x.iloc[:, 0]
+
+    return y
+
+def parse_cor(x):
+    """
+    Process the correlation file.
+
+    Parameters
+    ----------
+    x: matrix of correlation
+
+    Returns
+    -------
+    res: results matrix
+    """
+
+    if x.shape[1] != 2:
+        sys.exit("ERROR: Correlation file should have two columns "
+                 "of gene names and correlation R.")
+
+    x1 = dat.get_row_index(x)
+    x2 = dat.get_col_names(x)
+
+    y = pd.DataFrame()
+
+    if len(x1) != 1:
+        sys.exit("ERROR: Please, check the file and try again")
+
+
+    y['name'] = x[x1[0]]
+    y['cor'] = x[x2[0]]
+
+    return y
+
 def cont_method(x, y):
     """
     Control methods {supervised}.
@@ -126,31 +191,27 @@ def get_cor(exp_m, cbtype, goi, madf, cort, corf, biotypefilter=False,
     """
 
     if biotypefilter:
-        if biotypef.columns[0] != 'gene' or biotypef.columns[1] != 'biotype':
-            sys.exit("Make sure the column names and the order of the "
-                     "biotype file is in the right format: 'gene','biotype'")
-        else:
-            bsub = biotypef[biotypef['biotype'].isin([cbtype])]
-            esub = exp_m[exp_m['gene'].isin(bsub['gene'])]
+        bsub = biotypef[biotypef['biotype'].isin([cbtype])]
+        esub = exp_m[exp_m['name'].isin(bsub['name'])]
     else:
         esub = exp_m
 
     if madf < 1:
         sys.exit("Choose MAD threshold >= 1")
     esub = dat.filter_uninformative(esub, madf)
-    mtb=esub['gene'].str.contains(goi).sum()
+    mtb=esub['name'].str.contains(goi).sum()
 
     if mtb <= 0:
         sys.exit("Gene did not pass the MAD threshold. Try setting a "
         "lower value for -m/--mt, >= 1")
     esub = esub.dropna(how='any')
-    esub.set_index('gene', inplace=True)
+    esub.set_index('name', inplace=True)
     esub.index.name = None
 
     if docor:
         gcor = corf
         gcor.sort_values(by=['cor'], inplace=True, ascending=False)
-        gcor.index = gcor['gene']
+        gcor.index = gcor['name']
         gcor.index.name = None
         gcor.to_csv("AC.csv", index=False, header=True)
         if cort < 0.6:
@@ -173,8 +234,8 @@ def get_cor(exp_m, cbtype, goi, madf, cort, corf, biotypefilter=False,
         gde = cont_method(esub, goi)
         gcor = gcor.to_frame()
         gcor.columns = ['cor']
-        gcor['gene'] = gcor.index
-        gcor = gcor[['gene', 'cor']]
+        gcor['name'] = gcor.index
+        gcor = gcor[['name', 'cor']]
         cor_de = pd.concat([gcor, gde], axis=1)
         gcor.sort_values(by=['cor'], inplace=True, ascending=False)
         cor_de.sort_values(by=['cor'], inplace=True, ascending=False)
@@ -224,7 +285,7 @@ def make_prior1(npc, gcor):
     prior1 = pd.concat([df, df1], axis=1)
     prior1.set_index(gcor.iloc[:, 0], inplace=True)
     prior1.index.name = None
-    prior1.insert(0, 'gene', prior1.index)
+    prior1.insert(0, 'name', prior1.index)
     return prior1
 
 def preprocess_run_one(pf, biotypefilter=False, biotypef=False, exclude=None):
@@ -358,6 +419,7 @@ def process_run_two(hc2):
     pdm2 = pd.DataFrame(hc2['V1'] > hc2['V2'], columns=["V1vsV2"])
     pdm3 = pdm2
     pdm2 = pdm2[pdm2['V1vsV2'].astype(str).str.contains('True')]
+    pdm2.columns.values[0] = "predict"
     pdm2.to_csv("predictions.csv", index=True, header=True)
     pdm3.to_csv("FD.csv", index=True, header=True)
     return pdm2
@@ -425,21 +487,9 @@ def save_merged_n_d_ac_fd_co(n, d, ac, fd, co, path, nfile, run_info):
     -------
     """
 
-    n.to_csv("N_{}".format(nfile), index=True)
-    d.to_csv("D_{}".format(nfile), index=True)
-    ac.to_csv("AC_{}".format(nfile), index=True)
-    fd.to_csv("FD_{}".format(nfile), index=True)
-    co.to_csv("code_{}".format(nfile), index=True)
-
-    dbs_results = dbs.ACSNIDeriveResults(ac=pd.read_csv(os.path.join(path, "AC_{}".format(nfile))),
-                                   n=pd.read_csv(os.path.join(path, "N_{}".format(nfile))),
-                                   d=pd.read_csv(os.path.join(path, "D_{}".format(nfile))),
-                                   fd=pd.read_csv(os.path.join(path, "FD_{}".format(nfile))),
-                                   co=pd.read_csv(os.path.join(path, "code_{}".format(nfile))),
+    dbs_results = dbs.ACSNIDeriveResults(ac=ac, n=n, d=d, fd=fd, co=co,
                                    run_info=run_info)
 
-    for i in ["AC", "N", "D","FD","code"]:
-        os.remove(os.path.join(path, "{}_{}".format(i, nfile)))
 
     mf = [f for f in os.listdir(path) if f.endswith(".h5")]
     for m in mf:

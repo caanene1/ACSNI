@@ -13,7 +13,7 @@ from pandas import read_csv
 import sys, os, gc
 from numpy.random import seed
 from tensorflow.random import set_seed
-from ACSNI.dat import gene_sets, name_generator
+from ACSNI.dat import gene_sets, name_generator, parse_exp
 from ACSNI.sim import merge_multi, shuffle_exp
 from ACSNI.corep import main_model_prediction, merge_minimal_out, check_name, check_duplicates
 
@@ -62,7 +62,7 @@ run_info = {
     "w": tf, "s": sd }
 
 ##############################################################################
-expression_matrix = read_csv(inp)
+expression_matrix = parse_exp(read_csv(inp))
 check_name(expression_matrix)
 check_duplicates(expression_matrix)
 

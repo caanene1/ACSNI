@@ -77,15 +77,11 @@ elif i_bio_file is not None and i_bio_type is not None:
     if i_ex is not None:
         i_ex = pd.read_csv(i_ex, header=None)[0]
 
-    biotype_file = pd.read_csv(i_bio_file)
+    biotype_file = utility.parse_biotype(pd.read_csv(i_bio_file))
     biotype_file = pd.DataFrame(data=biotype_file)
 
-    if biotype_file.columns[0] != 'gene' or biotype_file.columns[1] != 'biotype':
-        sys.exit("ERROR: Make sure the column names and the order of the biotype "
-                 " file is in the right format: 'gene','biotype'")
-    else:
-        gpb = biotype_file['gene'].str.contains(i_gene).sum()
-        if gpb <= 0:
+    gpb = biotype_file['name'].str.contains(i_gene).sum()
+    if gpb <= 0:
             sys.exit("ERROR: Gene not found in Biotype file")
 else:
     sys.exit("ERROR: Biotype file and Biotype filter threshold must be provided if you "
@@ -99,16 +95,12 @@ if i_corr is None:
     bc = False
 elif i_corr is not None:
     bc = True
-    corr_file = pd.read_csv(i_corr)
+    corr_file = utility.parse_cor(pd.read_csv(i_corr))
     corr_file = pd.DataFrame(data=corr_file)
 
-    if corr_file.columns[0] != 'gene' or corr_file.columns[1] != 'cor':
-        sys.exit("ERROR: Make sure the column names and the order of the correlation file "
-                 "is in the right format: 'gene','cor'")
-    else:
-        gpb=corr_file['gene'].str.contains(i_gene).sum()
-        if gpb <= 0:
-            sys.exit("Gene not found in Correlation file")
+    gpb=corr_file['name'].str.contains(i_gene).sum()
+    if gpb <= 0:
+        sys.exit("Gene not found in Correlation file")
 else:
     sys.exit("ERROR: Correlation file must be provided if you intend to use modified gene set "
              "for the generation of prior matrix 1. Else leave the -u/--corr_file parameter as default")
@@ -116,7 +108,7 @@ else:
 
 ##############################################################################
 # Expression data
-exp_dat = pd.read_csv(i_dat)
+exp_dat = dat.parse_exp(pd.read_csv(i_dat))
 
 # Working directory
 pa_re = i_gene + i_dat[:-4] + "-" + dat.name_generator(7)
@@ -132,10 +124,10 @@ else:
 ##############################################################################
 # Process expression
 exp_dat = pd.DataFrame(data=exp_dat)
-gpe=exp_dat['gene'].str.contains(i_gene).sum()
+gpe=exp_dat['name'].str.contains(i_gene).sum()
+
 if gpe <= 0:
     sys.exit("ERROR: Gene not found in Expression matrix")
-
 
 ##############################################################################
 # Correlation matrix

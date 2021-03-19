@@ -35,6 +35,30 @@ def get_row_index(x):
 
     return id_name
 
+def parse_exp(x):
+    """
+    Process the expression file
+
+    Parameters
+    ----------
+    x: matrix of expression
+
+    Returns
+    -------
+    res: results matrix
+    """
+
+    x1 = get_row_index(x)
+    x2 = get_col_names(x)
+    y = pd.DataFrame()
+
+    if len(x1) != 1:
+        sys.exit("ERROR: Please, check the file and try again")
+
+    y['name'] = x[x1[0]]
+    y = pd.concat([y, x[x2]], axis=1)
+    return y
+
 def remove_unexpressed(df):
     """
     Remove unexpressed genes
