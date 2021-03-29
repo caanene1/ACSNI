@@ -118,9 +118,11 @@ Correlation file (Optional) - The correlation file (.csv) specified by ```-u```,
 | RNU1-114P  |  0.72  |
 
 #Example run using the automatic estimation of optimal dimensions (```p=0```)
+
 ```ACSNI-derive -i <expression.csv> -g <"gene"> -m 1.2 --ct 0.60 --pc 5 -p 0```
 
 #Example run using fixed dimensions (16%)
+
 ```ACSNI-derive -i <expression.csv> -g <"gene"> -m 1.2 --ct 0.60 --pc 5```
 
 # Output ACSNI-derive
