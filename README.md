@@ -145,17 +145,9 @@ Predicted (.csv)
 | name | Gene |
 |  predict |  Classification of genes|
 
-In order to generate functional relevance in a biological context for the
-predicted genes (```predictions.csv```), we recommend using ```GeneWalk```
-(https://github.com/churchmanlab/genewalk). It takes a list of genes and the
-resultant representations enable a quantitative comparison between genes and
-GO terms, highlighting the GO terms most relevant for the biological context
-under study. It identifies context-relevant GO terms while filtering out the
-majority of irrelevant GO terms for each gene, allowing the user to quickly hone
-in on relevant target. It also identifies regulator genes from the input
-list: those with a large connectivity to other input genes and high fraction of
-relevant GO annotations and moonlighting genes, those with many GO annotations
-of which a low fraction are relevant.
+In order to identify context-relevant GO terms for the predicted genes 
+(```predictions.csv```), we recommend using ```GeneWalk```
+(https://github.com/churchmanlab/genewalk).
 
 Null (.csv) {Shuffled expression matrix}
 
