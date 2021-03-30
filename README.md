@@ -151,7 +151,7 @@ predicted genes (```predictions.csv```), we recommend using ```GeneWalk```
 resultant representations enable a quantitative comparison between genes and
 GO terms, highlighting the GO terms most relevant for the biological context
 under study. It identifies context-relevant GO terms while filtering out the
-majority of irrelevant GO terms for each gene, allowing the us to quickly hone
+majority of irrelevant GO terms for each gene, allowing the user to quickly hone
 in on relevant target. It also identifies regulator genes from the input
 list: those with a large connectivity to other input genes and high fraction of
 relevant GO annotations and moonlighting genes, those with many GO annotations
