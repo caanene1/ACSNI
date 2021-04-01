@@ -92,8 +92,9 @@ Null (.csv) {Shuffled expression matrix}
 
 Expression Matrix - See ``-i``` description above.
 
-Note - We highly recommend to removing any un-desirable genes (eg. MT, RPL, Receptor genes) from the expression
+Note - We recommend removing any un-desirable genes (eg. MT, RPL) from the expression
 matrix prior to running ACSNI-derive as they usually interfere during initial prior matrix generation steps.
+For TCR/BCR genes, counts of alpha, beta and gamma chains can be combined into a single count.
 
 Biotype file (Optional) - The biotype file (.csv) specified by ```-f```, given if the generation of gene set should be
 based on a particular biotype specified by ```-b```.
@@ -144,10 +145,6 @@ Predicted (.csv)
 | --- | --- |
 | name | Gene |
 |  predict |  Classification of genes|
-
-In order to identify context-relevant GO terms for the predicted genes 
-(```predictions.csv```), we recommend using ```GeneWalk```
-(https://github.com/churchmanlab/genewalk).
 
 Null (.csv) {Shuffled expression matrix}
 
