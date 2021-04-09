@@ -1,0 +1,58 @@
+#!python
+
+"""
+Name: data_split
+Description: Split data samples for multiple runs
+Author: Chinedu A. Anene, Phd
+Usage:
+    Run in command line with required command arguments:
+                                        --input
+                                        --split
+                                        --path
+Output: Data splits
+Usage: python3 $ACSNIsplit -i expression.csv -s 5
+"""
+
+# Imports
+import argparse
+import pandas as pd
+import numpy as np
+from pandas import read_csv
+
+##############################################################################
+parser = argparse.ArgumentParser()
+parser.add_argument('-i', '--input', type=str, default='expression.csv',
+                    help='Input expression matrix to split')
+parser.add_argument('-s', '--split', default=5,
+                    help='Number of splits to create')
+args = parser.parse_args()
+##############################################################################
+
+#######################
+# Parameters
+df = args.input
+n = int(args.split)
+#######################
+
+##############################################################################
+# Set head and headless
+full_data = read_csv(df).transpose()
+head_only = full_data.iloc[:1, ]
+head_less = full_data.iloc[1:]
+
+# Random sample
+seed = int(np.random.randint(low=0, high=10000, size=1))
+np.random.seed(seed)
+
+# Shuffle and sample
+shuffled = head_less.sample(frac=1)
+res = np.array_split(shuffled, n)
+
+# Save all in the the working directory
+index = 0
+for i in res:
+    dat_s = pd.concat([head_only, i]).transpose()
+    dat_s.to_csv("{}_split_{}.csv".format(df, index), index=False)
+    index += 1
+print("Splits saved to working directory path")
+##############################################################################

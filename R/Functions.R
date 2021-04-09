@@ -15,7 +15,7 @@ geo_mean <- function(x, na.rm=TRUE){
 predict_z <- function(x, y){
   ## Function to process the prediction
   #x_num <- x[c(1, ncol(x)-1)]
-  x_num <- x[c("gene", "Sum_stat")]
+  x_num <- x[c("name", "Sum_stat")]
   print(names(x_num))
   #boot <- mean(x[[ncol(x)]]) * y / 100
   #x_num[2] <- (x_num[[2]] / boot) * 100
@@ -25,7 +25,7 @@ predict_z <- function(x, y){
 # Function to call Benchmark methods
 predict_z_b <- function(x, y, cut){
   ## Function to process the prediction for benchmark
-  x_num <- x[c("gene", y)]
+  x_num <- x[c("name", y)]
   x_num$P <- ifelse(abs(x_num[[y]]) >= cut, "P", "B")
   print(summary(as.factor(x_num$P)))
   return(x_num) }
@@ -33,7 +33,7 @@ predict_z_b <- function(x, y, cut){
 predict_z_d <- function(x, y){
   ## Function to process the prediction from derive
   x_num <- x
-  names(x_num) <- c("gene", "stat")
+  names(x_num) <- c("name", "stat")
   x_num$P <- ifelse(x_num$stat == "True", "P", "B")
   print(summary(as.factor(x_num$P)))
   return(x_num) }
@@ -81,7 +81,7 @@ stat_w_DE <- function(x=x, df=df, y=datasets, z="KLF6_GSE115763", f=0.1, fc=1.5)
     x$FC <- abs(as.numeric(gsub("_.*", "", x[[z]])))
     x1 <- x[!is.na(x$FDR), ]
     x1$DE <- ifelse(x1$FDR <= f & x1$FC >= fc, "DE", "nDE")
-    x1 <- merge(df, x1, by.x = "gene", by.y = "Symbol")
+    x1 <- merge(df, x1, by.x = "name", by.y = "Symbol")
     #
     tbl <- table(x1$PP, x1$DE)
     Chiq <- chisq.test(tbl)
@@ -130,7 +130,7 @@ permutation_test <- function(n_boot, target, space, size, observed) {
 }
 ## Function to calculate ChIP enrichment for global
 stat_chip_global <- function(x, y, chip){
-  x_al <- merge(x, chip, by = "gene", all.x = T)
+  x_al <- merge(x, chip, by.x = "name", by.y = "gene", all.x = T)
   x_alb <- x_al
   for (i in y){
     x_alb[[i]] <- ifelse(is.na(x_alb[[i]]) | x_alb[[i]] <= 0, "P", "B")
@@ -159,7 +159,7 @@ stat_chip_global <- function(x, y, chip){
 }
 ## Function calculate the Enrichment for ChIP by layer
 stat_chip_layer <- function(x, y, chip, boot){
-  x_al <- merge(x, chip, by = "gene", all.x = T)
+  x_al <- merge(x, chip, by = "name", all.x = T)
   # For Enrichment type like case one
   x_alb <- x_al
   for (i in y){
@@ -239,7 +239,7 @@ robust_overP <- function(x=PP, y=PP2, b=100){
   names(P1)[2] <- "P1"
   P2 <- y[c(1,3)]
   names(P2)[2] <- "P2"
-  df <- merge(P1, P2, by = "gene")
+  df <- merge(P1, P2, by = "name")
   df$OP <- ifelse(df$P1 == "P" & df$P2 == "P", "P", "B")
   res <- data.frame(ID = "real", overlap=nrow(df[df$OP == "P",]))
 
@@ -406,7 +406,6 @@ calc_simulate_rate <- function(path, files) {
   Result <- data.frame("ID"="base", "Sum"=0, "B" = 0,
                        "P"=0, "Rate"=0, "mad"=0, "alpha"=0, "percentage"=0,
                        "totalP" = 0, "Size" = 0,  "pathway" = 0, "reg"=0)
-   f <- files[1]
 
     for (f in files){
     P <- read.csv(paste(path, "/", f, sep = ""))
@@ -593,22 +592,38 @@ get_benchmark <- function(expr, set){
   set <- mTOR[mTOR$PID_MTOR_4PATHWAY == 1,]["gene"]
   set <- ATF2[ATF2$PID_ATF2_PATHWAY == 1,]["gene"]
 }
+
+
 ##############################################################################
 {
   # Particular calculations
+  TCGA <- read.csv("~/Desktop/mTOR_TCGA/TCGA_PID_MTOR_4PATHWAY-Y69LHUN/resultsdbsTCGA_.ptl.csv")
+  GSE <- read.csv("~/Desktop/mTOR_GSE/GSE_PID_MTOR_4PATHWAY-9429F82/resultsdbsGSE_.ptl.csv")
 dat <- GSE
-method <- names(dat[2:5])
+
 val = c("KLF6_GSE115763", "EPAS1_GSE115389")
+res <- predict_z(x=dat, y=2)
+db_res <- merge(res, db, by.x = "name", by.y = "Symbol")
+out <- stat_DE(x=db_res, y=val, f=0.1, fc=0.5)
+
+method <- names(dat[2:5])
 for (m in method){
   print(m)
   res <- predict_z_b(x=dat, y=m, cut=0.4)
-  db_res <- merge(res, db, by.x = "gene", by.y = "Symbol")
+  db_res <- merge(res, db, by.x = "name", by.y = "Symbol")
   out <- stat_DE(x=db_res, y=val, f=0.1, fc=1.5) }
 }
 
 {
  tab <- process_Chip_density("/Users/chineduanene/Documents/ACSNI/2.Data/ATF4-case/CHIP")
+  AA <- read.csv("~/Desktop/ATF2_AA/AA_PID_ATF2_PATHWAY-U050TS5/resultsdbsAA_.ptl.csv")
   dat <- AA
+  res <- predict_z(x=dat, y=2)
+  out <- stat_chip_global(x=res, y=names(tab[2:9]), chip=tab)
+
+  db_res <- merge(res, db, by.x = "name", by.y = "Symbol")
+  out <- stat_DE(x=db_res, y=val, f=0.1, fc=0.5)
+
   method <- names(dat[2:5])
   n = 0
   for (m in method) {
@@ -633,8 +648,11 @@ for (m in method){
 {
   # Benchmark plot
   plot <- plot[plot$Model == "Real",]
+  plot <- plot[plot$Method == "ACSNI",]
+
+
   ggpubr::ggbarplot(plot, x = "Gene", y = "Ratio",
-            fill = "Method",
+            fill = "P",
             add = "mean_se",
             width = 0.6,
             size = 0.4,
@@ -648,6 +666,22 @@ for (m in method){
             lab.pos = "out"
             #x.text.angle = 90
             )
+
+
+  ggpubr::ggbarplot(plot, x = "Group", y = "Coverage",
+                    fill = "Group",
+                    width = 0.6,
+                    size = 0.4,
+                    lab.size = 1,
+                    ylab = "ACSNI/DE overlap (%)",
+                    xlab = "Method",
+                    palette = c("darkred", "grey"),
+                    sort.by.groups = T,
+                    position = position_dodge(0.9),
+                    ggtheme = theme_minimal(),
+                    lab.pos = "out"
+                    #x.text.angle = 90
+  )
 
 }
 
@@ -761,8 +795,8 @@ draw.triple.venn(area1 = 699, area2 = 237, area3 = 157, n12 = 69, n13 = 55, n23 
 plot <- plot[plot$Method != "all",]
 
 # Benchmark plot
-ggpubr::ggbarplot(plot, x = "TF", y = "ACSNI",
-                  fill = "Method",
+ggpubr::ggbarplot(plot, x = "TF", y = "Enrichment",
+                  fill = "P",
                   #add = "mean_se",
                   width = 0.6,
                   size = 0.4,

@@ -3,11 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="20184109-87a7-4321-a9ed-9acf42775cc0" name="Default Changelist" comment="Update Major">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ACSNI/dbs.py" beforeDir="false" afterPath="$PROJECT_DIR$/ACSNI/dbs.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ACSNI/mud.py" beforeDir="false" afterPath="$PROJECT_DIR$/ACSNI/mud.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACSNI/utility.py" beforeDir="false" afterPath="$PROJECT_DIR$/ACSNI/utility.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/R/Functions.R" beforeDir="false" afterPath="$PROJECT_DIR$/R/Functions.R" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/ACSNI-derive" beforeDir="false" afterPath="$PROJECT_DIR$/bin/ACSNI-derive" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/derive.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/ACSNI-get" beforeDir="false" afterPath="$PROJECT_DIR$/bin/ACSNI-get" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sh/Paper_cases.sh" beforeDir="false" afterPath="$PROJECT_DIR$/sh/Paper_cases.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
