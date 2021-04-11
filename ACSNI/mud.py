@@ -18,7 +18,7 @@ from ACSNI.dat import name_generator
 
 class DimRed:
   """
-  Class for triple dimension reduction.
+  Class for quadruple dimension reduction.
   """
 
   def __init__(self, x, w, p):
@@ -49,7 +49,7 @@ class DimRed:
       self.__run_id = name_generator(6)
 
   def __str__(self):
-      return "Triple dimension reduction class"
+      return "Quadruple dimension reduction class"
 
   def __repr__(self):
       return "\n" + self.__str__()
@@ -195,7 +195,7 @@ class DimRed:
 
   def fit(self):
       """
-      Fit four dimension reduction {Median, PCA, NMF, AE[DE]}
+      Fit quadruple dimension reduction {Median, PCA, NMF, AE[DE]}
 
       """
       self.l_med()

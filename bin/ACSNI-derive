@@ -27,7 +27,7 @@ ap.add_argument("-b", "--bio_type", required=False,
                 help="Gene Bio_type of interest", default=None)
 ap.add_argument('-m', '--mad', default = 1.2, required=False, type=float,
                 help="Minimum median absolute deviation")
-ap.add_argument('-p', '--lp', default=16, required=False, type=int,
+ap.add_argument('-p', '--lp', default=0, required=False, type=int,
                 help="Percentage of gene_set for model layers")
 ap.add_argument('-c', '--alpha', default=0.01, required=False,type=float,
                 help="Alpha threshold to make prediction calls")

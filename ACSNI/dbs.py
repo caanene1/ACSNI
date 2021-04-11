@@ -73,6 +73,7 @@ class AcsniResults:
   def get_sub_process_network(self, c):
       n_p = self.p.loc[self.p["Sum_stat"] >= c]
       n_p = n_p.select_dtypes(exclude=["number", "float", "int"]).copy()
+      n_p = n_p[[col for col in n_p if col.startswith("AE")]]
       n_p["name"] = n_p.index
       n_p = n_p.melt(id_vars="name", var_name="sub", value_name="Predicted")
       n_p = n_p.loc[n_p["Predicted"] == "P"]
@@ -101,7 +102,10 @@ class AcsniResults:
       self.__nm = t.loc[:, t.columns != "ID"].columns[0]
 
       weights = self.w.select_dtypes(include=["number", "float", "int"]).columns
+      weights = [cc for cc in weights if cc.startswith("AE")]
       lm_w = pd.DataFrame({"sub": weights})
+
+      self.w = pd.merge(self.w, t, left_on="ID", right_on="ID", how="left")
 
       lm_g = []
       for i in weights:

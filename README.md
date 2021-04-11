@@ -8,7 +8,7 @@ aids the discovery of pathway components and classification of the crosstalk bet
 
 ![workflow](https://user-images.githubusercontent.com/44468440/111687762-92e9e600-8822-11eb-8d59-38d08a95d115.png)
 
-This tool is built in python3 with tensorflow backend and keras functional API.
+This tool is built in python3.8 with tensorflow backend and keras functional API.
 
 # Installation and running the tool
 The best way to get ACSNI along with all the dependencies is to install the release from python package installer (pip)
