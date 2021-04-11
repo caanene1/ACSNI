@@ -27,7 +27,7 @@ setuptools.setup(
         "Operating System :: OS Independent"
     ],
     install_requires=install_requires,
-    python_requires='>=3.6',
+    python_requires='>=3.8',
 )
 
 # Build >> python3 setup.py sdist bdist_wheel
