@@ -118,13 +118,13 @@ Correlation file (Optional) - The correlation file (.csv) specified by ```-u```,
 | SNHG12  |  0.80  |
 | RNU1-114P  |  0.72  |
 
-#Example run using the automatic estimation of optimal dimensions (```p=0```)
-
-```ACSNI-derive -i <expression.csv> -g <"gene"> -m 1.2 --ct 0.60 --pc 5 -p 0```
-
-#Example run using fixed dimensions (16%)
+#Example run using the automatic estimation of optimal dimensions
 
 ```ACSNI-derive -i <expression.csv> -g <"gene"> -m 1.2 --ct 0.60 --pc 5```
+
+#Example run using fixed dimensions (16%) (```p=16```)
+
+```ACSNI-derive -i <expression.csv> -g <"gene"> -m 1.2 --ct 0.60 --pc 5 -p 16```
 
 # Output ACSNI-derive
 Database (.ptl)
