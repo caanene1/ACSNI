@@ -9,7 +9,7 @@ with open("requirements.txt") as rq:
 
 setuptools.setup(
     name="ACSNI",
-    version="1.0.4",
+    version="1.0.5",
     scripts=["bin/ACSNI-run", "bin/ACSNI-derive", "bin/ACSNI-get", "bin/ACSNI-split"],
     author="Chinedu A. Anene",
     collaborator="Faraz Khan",
