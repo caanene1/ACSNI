@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="20184109-87a7-4321-a9ed-9acf42775cc0" name="Default Changelist" comment="Update Major">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACSNI/mud.py" beforeDir="false" afterPath="$PROJECT_DIR$/ACSNI/mud.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
