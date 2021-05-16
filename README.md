@@ -86,8 +86,6 @@ Null (.csv) {Shuffled expression matrix}
 
 
 
-
-
 # Input ACSNI-derive
 
 Expression Matrix - See ``-i``` description above.
@@ -117,14 +115,6 @@ Correlation file (Optional) - The correlation file (.csv) specified by ```-u```,
 | MALAT1  |  0.85  |
 | SNHG12  |  0.80  |
 | RNU1-114P  |  0.72  |
-
-#Example run using the automatic estimation of optimal dimensions
-
-```ACSNI-derive -i <expression.csv> -g <"gene"> -m 1.2 --ct 0.60 --pc 5```
-
-#Example run using fixed dimensions (16%) (```p=16```)
-
-```ACSNI-derive -i <expression.csv> -g <"gene"> -m 1.2 --ct 0.60 --pc 5 -p 16```
 
 # Output ACSNI-derive
 Database (.ptl)
@@ -169,11 +159,12 @@ Number of splits - The number of independent cohorts to generate from `-i```.
 Outputs the data splits in the current working directory.
 
 # Extras
-Example files representing the datasets analysed in the paper are included inside the folder "Resources".
-
 R functions to reproduce the downstream analyses reported in the paper are inside the folder "R".
 
 Example runs are inside the folder "sh".
+
+# Tutorial
+An extensive tutorial on how to use ACSNI commands can be found inside the Tutorial folder.
 
 # To clone the source repository
 git clone https://github.com/caanene1/ACSNI

@@ -43,8 +43,8 @@ class DimRed:
       self.__ael2 = None
       self.__a = None
       self.__r = 15
-      self.__a1 = 0.04
-      self.__a2 = 0.80
+      self.__a1 = 0.03
+      self.__a2 = 0.85
       self.__scorer = metrics.explained_variance_score
       self.__run_id = name_generator(6)
 
