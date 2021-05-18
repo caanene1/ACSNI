@@ -215,8 +215,8 @@ def get_cor(exp_m, cbtype, goi, madf, cort, corf, biotypefilter=False,
         gcor.index = gcor['name']
         gcor.index.name = None
         gcor.to_csv("AC.csv", index=False, header=True)
-        if cort < 0.6:
-            sys.exit("Choose correlation threshold >= 0.6, non-negative")
+        if cort < 0.4:
+            sys.exit("Choose correlation threshold >= 0.4, non-negative")
         gcor = gcor[abs(gcor['cor']) > cort]
 
         if len(gcor.index) < 19:
@@ -242,8 +242,8 @@ def get_cor(exp_m, cbtype, goi, madf, cort, corf, biotypefilter=False,
         cor_de.sort_values(by=['cor'], inplace=True, ascending=False)
         cor_de.to_csv("AC.csv", index=False, header=True)
 
-        if cort < 0.6:
-            sys.exit("Choose correlation threshold >= 0.6")
+        if cort < 0.4:
+            sys.exit("Choose correlation threshold >= 0.4")
         gcor = gcor[abs(gcor['cor']) > cort]
         if len(gcor.index) < 19:
             sys.exit("You don't have enough genes that show correlation "
