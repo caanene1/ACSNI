@@ -1,31 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="20184109-87a7-4321-a9ed-9acf42775cc0" name="Default Changelist" comment="Update Major">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACSNI.egg-info/PKG-INFO" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACSNI.egg-info/SOURCES.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACSNI.egg-info/dependency_links.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACSNI.egg-info/requires.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACSNI.egg-info/top_level.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ACSNI/utility.py" beforeDir="false" afterPath="$PROJECT_DIR$/ACSNI/utility.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tutorial/ACSNI commands.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Tutorial/ACSNI commands.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/ACSNI/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/ACSNI/corep.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/ACSNI/dat.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/ACSNI/dbs.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/ACSNI/mud.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/ACSNI/network.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/ACSNI/sim.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/ACSNI/utility.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/scripts-3.8/ACSNI-derive" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/scripts-3.8/ACSNI-get" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/scripts-3.8/ACSNI-run" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/scripts-3.8/ACSNI-split" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/ACSNI-1.0.5-py3-none-any.whl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/ACSNI-1.0.5.tar.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-    </list>
+    <list default="true" id="20184109-87a7-4321-a9ed-9acf42775cc0" name="Default Changelist" comment="Update Major" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
