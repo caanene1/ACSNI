@@ -1,0 +1,151 @@
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:z="http://www.zotero.org/namespaces/export#"
+ xmlns:dcterms="http://purl.org/dc/terms/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:bib="http://purl.org/net/biblio#"
+ xmlns:foaf="http://xmlns.com/foaf/0.1/"
+ xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/">
+    <rdf:Description rdf:about="urn:isbn:1-72818-470-3">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf>
+            <bib:Journal>
+               <dc:identifier>ISBN 1-72818-470-3</dc:identifier>
+            </bib:Journal>
+        </dcterms:isPartOf>
+        <dc:publisher>
+           <foaf:Organization><foaf:name>IEEE</foaf:name></foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Bahadur</foaf:surname>
+                        <foaf:givenName>Nitish</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Paffenroth</foaf:surname>
+                        <foaf:givenName>Randy</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>Dimension estimation using autoencoders with applications to financial market analysis</dc:title>
+        <dc:date>2020</dc:date>
+        <bib:pages>527-534</bib:pages>
+        <bib:presentedAt>
+            <bib:Conference>
+                <dc:title>2020 19th IEEE International Conference on Machine Learning and Applications (ICMLA)</dc:title>
+            </bib:Conference>
+        </bib:presentedAt>
+    </rdf:Description>
+    <bib:Article rdf:about="#item_5304">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:2169-3536"/>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Shi</foaf:surname>
+                        <foaf:givenName>Yong</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lei</foaf:surname>
+                        <foaf:givenName>Minglong</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Ma</foaf:surname>
+                        <foaf:givenName>Rongrong</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Niu</foaf:surname>
+                        <foaf:givenName>Lingfeng</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>Learning robust auto-encoders with regularizer for linearity and sparsity</dc:title>
+        <dc:date>2019</dc:date>
+        <dc:description>Publisher: IEEE</dc:description>
+        <bib:pages>17195-17206</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:2169-3536">
+        <prism:volume>7</prism:volume>
+        <dc:title>IEEE Access</dc:title>
+        <dcterms:alternative>IEEE Access</dcterms:alternative>
+        <dc:identifier>ISSN 2169-3536</dc:identifier>
+    </bib:Journal>
+    <bib:Article rdf:about="#item_5305">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+           <bib:Journal></bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Sun</foaf:surname>
+                        <foaf:givenName>Yuxin</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>Identification of antigen-specific patterns from high-dimensional sequencing data</dc:title>
+        <dc:date>2020</dc:date>
+        <dc:description>Publisher: UCL (University College London)</dc:description>
+    </bib:Article>
+    <bib:Article rdf:about="#item_5306">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:1548-7091"/>
+        <dc:title>Pathway and network analysis of cancer genomes</dc:title>
+        <dc:date>2015</dc:date>
+        <dc:description>Publisher: Nature Publishing Group US New York</dc:description>
+        <bib:pages>615-621</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:1548-7091">
+        <prism:volume>12</prism:volume>
+        <dc:title>Nature methods</dc:title>
+        <prism:number>7</prism:number>
+        <dcterms:alternative>Nature methods</dcterms:alternative>
+        <dc:identifier>ISSN 1548-7091</dc:identifier>
+    </bib:Journal>
+    <bib:Article rdf:about="#item_5307">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:1563-5147"/>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Sheela</foaf:surname>
+                        <foaf:givenName>K Gnana</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Deepa</foaf:surname>
+                        <foaf:givenName>Subramaniam N</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>Review on methods to fix number of hidden neurons in neural networks</dc:title>
+        <dc:date>2013</dc:date>
+        <dc:description>Publisher: Wiley Online Library</dc:description>
+        <bib:pages>425740</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:1563-5147">
+        <prism:volume>2013</prism:volume>
+        <dc:title>Mathematical problems in engineering</dc:title>
+        <prism:number>1</prism:number>
+        <dcterms:alternative>Mathematical problems in engineering</dcterms:alternative>
+        <dc:identifier>ISSN 1563-5147</dc:identifier>
+    </bib:Journal>
+</rdf:RDF>
